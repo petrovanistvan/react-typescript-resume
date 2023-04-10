@@ -19,6 +19,14 @@ export function Select({ value, onChange, options }: SelectProps) {
     function clearOptions() {
         onChange(undefined)
     }
+
+    function selectOption(option: SelectOption) {
+        onChange(option)
+    }
+
+    function isOptionSelected(option: SelectOption) {
+        return option === value
+    }
     return (
         <div onBlur={() => setIsOpen(false)} onClick={() => setIsOpen(prev => !prev)} tabIndex={0} className={styles.container}>
             <span className={styles.value}>{value?.label}</span>
@@ -31,7 +39,11 @@ export function Select({ value, onChange, options }: SelectProps) {
             <div className={styles.caret}></div>
             <ul className={`${styles.options} ${isOpen ? styles.show : ""}`}>
                 {options.map(option => (
-                    <li key={option.label} className={styles.option}>
+                    <li onClick={e => {
+                        e.stopPropagation()
+                        selectOption(option)
+                        setIsOpen(false)
+                    }} key={option.label} className={`${styles.option} ${isOptionSelected(option)} ? styles.selected : ""`}>
                         {option.label}
                     </li>
                 ))}
